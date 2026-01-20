@@ -991,11 +991,13 @@ async function submitPozycja(e) {
         return;
     }
 
+    const notatkaValue = form.notatka.value.trim();
+
     const data = {
         id_listy_zakupow: currentPozycjaListaId,
         id_produktu: idProduktu,
         ilosc: parseInt(form.ilosc.value),
-        notatka: form.notatka.value || null,
+        notatka: notatkaValue || null,  // <- zmiana: jeśli puste to null
         czy_kupione: false,
     };
 
