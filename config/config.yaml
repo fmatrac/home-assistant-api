@@ -2,7 +2,7 @@ server:
   port: 8000
 
 postgres:
-  conn: "postgres://home_assistant_user:home_assistant_password@localhost:5432/home_assistant?sslmode=disable"
+  conn: "postgres://home_assistant_user:home_assistant_password@db:5432/home_assistant?sslmode=disable"
 
 logging:
   level: "info"

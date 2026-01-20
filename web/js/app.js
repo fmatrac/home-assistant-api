@@ -173,9 +173,14 @@ function renderWydarzeniaList(wydarzenia, selectedDate = null) {
         return;
     }
 
+    // Sort events by data_startu (ascending - from nearest to latest)
+    const sortedWydarzenia = [...wydarzenia].sort((a, b) => {
+        return new Date(a.data_startu) - new Date(b.data_startu);
+    });
+
     let header = selectedDate ? `<h4 style="margin-bottom:15px;">Wydarzenia na ${selectedDate}:</h4>` : '';
 
-    container.innerHTML = header + wydarzenia.map(w => `
+    container.innerHTML = header + sortedWydarzenia.map(w => `
         <div class="item-card priority-${w.priorytet}">
             <h3>${escapeHtml(w.tytul)}</h3>
             <p>${escapeHtml(w.opis)}</p>
@@ -384,7 +389,7 @@ async function loadListyZakupow() {
         }
 
         container.innerHTML = listy.map(l => `
-            <div class="item-card lista-card" onclick="showPozycjeListy(${l.id}, '${escapeHtml(l.nazwa)}')" style="cursor:pointer;">
+            <div class="item-card lista-card" data-list-id="${l.id}" data-list-name="${escapeHtml(l.nazwa)}" style="cursor:pointer;">
                 <h3>${escapeHtml(l.nazwa)}</h3>
                 <div class="meta">
                     <span class="badge badge-${l.status}">${l.status}</span>
@@ -396,12 +401,32 @@ async function loadListyZakupow() {
                 </div>
             </div>
         `).join('');
+
+        // Add click event listeners
+        document.querySelectorAll('.lista-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const id = parseInt(card.dataset.listId);
+                const name = card.dataset.listName;
+                showPozycjeListy(id, name);
+            });
+        });
     } catch (err) {
         container.innerHTML = `<div class="empty-state"><p>Blad: ${err.message}</p></div>`;
     }
 }
 
 async function showPozycjeListy(idListy, nazwaListy) {
+    // Validate parameters
+    if (!idListy || isNaN(idListy)) {
+        console.error('showPozycjeListy called with invalid idListy:', idListy);
+        loadListyZakupow();
+        return;
+    }
+
+    // Store current list info in global variables
+    currentPozycjaListaId = idListy;
+    currentPozycjaListaNazwa = nazwaListy;
+
     const container = document.getElementById('listy-zakupow-list');
     container.innerHTML = '<div class="loading">Ladowanie pozycji...</div>';
 
@@ -412,7 +437,7 @@ async function showPozycjeListy(idListy, nazwaListy) {
             <div class="item-card">
                 <h3>Lista: ${escapeHtml(nazwaListy)}</h3>
                 <button class="btn btn-small btn-secondary" onclick="loadListyZakupow()">Powrot</button>
-                <button class="btn btn-small btn-primary" onclick="showModal('pozycja', null, ${idListy}, '${escapeHtml(nazwaListy)}')">+ Dodaj pozycje</button>
+                <button class="btn btn-small btn-primary" onclick="showModal('pozycja')">+ Dodaj pozycje</button>
                 <hr style="margin: 15px 0;">
         `;
 
@@ -420,25 +445,42 @@ async function showPozycjeListy(idListy, nazwaListy) {
             html += '<p>Brak pozycji na liscie</p>';
         } else {
             html += pozycje.map(p => `
-                <div class="checkbox-item ${p.czy_kupione ? 'bought' : ''}">
-                    <input type="checkbox" ${p.czy_kupione ? 'checked' : ''} 
-                           onchange="toggleKupione(${p.id}, ${!p.czy_kupione}, ${idListy}, '${escapeHtml(nazwaListy)}')">
+                <div class="checkbox-item ${p.czy_kupione ? 'bought' : ''}" data-pozycja-id="${p.id}">
+                    <input type="checkbox" ${p.czy_kupione ? 'checked' : ''} data-action="toggle">
                     <span><strong>${getProduktNazwa(p.id_produktu)}</strong> x${p.ilosc}</span>
                     ${p.notatka ? `<span style="color:#95a5a6;"> - ${escapeHtml(p.notatka)}</span>` : ''}
-                    <button class="btn btn-small btn-danger" style="margin-left:auto;" 
-                            onclick="deletePozycja(${p.id}, ${idListy}, '${escapeHtml(nazwaListy)}')">x</button>
+                    <button class="btn btn-small btn-danger" style="margin-left:auto;" data-action="delete">x</button>
                 </div>
             `).join('');
         }
 
         html += '</div>';
         container.innerHTML = html;
+
+        // Add event listeners for checkboxes and delete buttons
+        container.querySelectorAll('.checkbox-item').forEach(item => {
+            const pozycjaId = parseInt(item.dataset.pozycjaId);
+
+            const checkbox = item.querySelector('input[data-action="toggle"]');
+            if (checkbox) {
+                checkbox.addEventListener('change', () => {
+                    toggleKupione(pozycjaId, checkbox.checked);
+                });
+            }
+
+            const deleteBtn = item.querySelector('button[data-action="delete"]');
+            if (deleteBtn) {
+                deleteBtn.addEventListener('click', () => {
+                    deletePozycja(pozycjaId);
+                });
+            }
+        });
     } catch (err) {
         container.innerHTML = `<div class="empty-state"><p>Blad: ${err.message}</p></div>`;
     }
 }
 
-async function toggleKupione(id, kupione, idListy, nazwaListy) {
+async function toggleKupione(id, kupione) {
     try {
         if (kupione) {
             await API.pozycjeListy.markAsBought(id);
@@ -447,17 +489,17 @@ async function toggleKupione(id, kupione, idListy, nazwaListy) {
             pozycja.czy_kupione = false;
             await API.pozycjeListy.update(id, pozycja);
         }
-        showPozycjeListy(idListy, nazwaListy);
+        showPozycjeListy(currentPozycjaListaId, currentPozycjaListaNazwa);
     } catch (err) {
         alert('Blad: ' + err.message);
     }
 }
 
-async function deletePozycja(id, idListy, nazwaListy) {
+async function deletePozycja(id) {
     if (!confirm('Usunac pozycje?')) return;
     try {
         await API.pozycjeListy.delete(id);
-        showPozycjeListy(idListy, nazwaListy);
+        showPozycjeListy(currentPozycjaListaId, currentPozycjaListaNazwa);
     } catch (err) {
         alert('Blad: ' + err.message);
     }
@@ -810,8 +852,6 @@ function showModal(type, data = null, extraParam = null, extraParam2 = null) {
             break;
 
         case 'pozycja':
-            currentPozycjaListaId = extraParam;
-            currentPozycjaListaNazwa = extraParam2;
             title.textContent = 'Dodaj pozycje do listy';
             form.innerHTML = `
                 <div class="form-group">
@@ -985,26 +1025,40 @@ async function submitPozycja(e) {
     e.preventDefault();
     const form = e.target;
 
+    // Validate list ID
+    if (!currentPozycjaListaId) {
+        alert('Blad: Nie wybrano listy zakupow. Sprobuj ponownie.');
+        closeModal();
+        loadListyZakupow();
+        return;
+    }
+
     const idProduktu = parseInt(document.getElementById('selected-produkt-id').value);
-    if (!idProduktu) {
+    if (!idProduktu || isNaN(idProduktu)) {
         alert('Wybierz produkt z listy lub wpisz nazwe nowego produktu');
         return;
     }
 
     const notatkaValue = form.notatka.value.trim();
 
+    // Save values before closeModal resets them
+    const listaId = currentPozycjaListaId;
+    const listaNazwa = currentPozycjaListaNazwa;
+
     const data = {
-        id_listy_zakupow: currentPozycjaListaId,
+        id_listy_zakupow: listaId,
         id_produktu: idProduktu,
         ilosc: parseInt(form.ilosc.value),
-        notatka: notatkaValue || null,  // <- zmiana: jeśli puste to null
+        notatka: notatkaValue.length > 0 ? notatkaValue : null,
         czy_kupione: false,
     };
+
+    console.log('submitPozycja data:', JSON.stringify(data));
 
     try {
         await API.pozycjeListy.create(data);
         closeModal();
-        showPozycjeListy(currentPozycjaListaId, currentPozycjaListaNazwa);
+        showPozycjeListy(listaId, listaNazwa);
     } catch (err) {
         alert('Blad: ' + err.message);
     }
