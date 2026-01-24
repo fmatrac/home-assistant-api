@@ -3,6 +3,10 @@ services:
     build: .
     ports:
       - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: on-failure
   db:
     image: postgres
     ports:
@@ -14,3 +18,8 @@ services:
     volumes:
       - ./db-data/:/var/lib/postgresql
       - ./db-init/:/docker-entrypoint-initdb.d/
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U home_assistant_user -d home_assistant"]
+      interval: 5s
+      timeout: 5s
+      retries: 5

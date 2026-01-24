@@ -3,15 +3,15 @@
 
 -- Nabiał
 INSERT INTO home_assistant.produkty (nazwa, kategoria, ulubiony) VALUES
-('Mleko 2%', 'Nabiał', true),
+('Mleko 2%', 'Nabiał', false),
 ('Mleko 3.2%', 'Nabiał', false),
-('Masło', 'Nabiał', true),
-('Jajka', 'Nabiał', true),
-('Ser żółty', 'Nabiał', true),
+('Masło', 'Nabiał', false),
+('Jajka', 'Nabiał', false),
+('Ser żółty', 'Nabiał', false),
 ('Ser biały', 'Nabiał', false),
-('Jogurt naturalny', 'Nabiał', true),
+('Jogurt naturalny', 'Nabiał', false),
 ('Jogurt owocowy', 'Nabiał', false),
-('Śmietana 18%', 'Nabiał', true),
+('Śmietana 18%', 'Nabiał', false),
 ('Śmietana 30%', 'Nabiał', false),
 ('Kefir', 'Nabiał', false),
 ('Serek wiejski', 'Nabiał', false),
@@ -21,10 +21,10 @@ INSERT INTO home_assistant.produkty (nazwa, kategoria, ulubiony) VALUES
 
 -- Pieczywo
 INSERT INTO home_assistant.produkty (nazwa, kategoria, ulubiony) VALUES
-('Chleb pszenny', 'Pieczywo', true),
+('Chleb pszenny', 'Pieczywo', false),
 ('Chleb żytni', 'Pieczywo', false),
-('Chleb tostowy', 'Pieczywo', true),
-('Bułki', 'Pieczywo', true),
+('Chleb tostowy', 'Pieczywo', false),
+('Bułki', 'Pieczywo', false),
 ('Bagietka', 'Pieczywo', false),
 ('Rogaliki', 'Pieczywo', false),
 ('Chleb razowy', 'Pieczywo', false),
@@ -32,34 +32,34 @@ INSERT INTO home_assistant.produkty (nazwa, kategoria, ulubiony) VALUES
 
 -- Mięso i wędliny
 INSERT INTO home_assistant.produkty (nazwa, kategoria, ulubiony) VALUES
-('Pierś z kurczaka', 'Mięso', true),
+('Pierś z kurczaka', 'Mięso', false),
 ('Udka z kurczaka', 'Mięso', false),
-('Mięso mielone wołowe', 'Mięso', true),
+('Mięso mielone wołowe', 'Mięso', false),
 ('Mięso mielone wieprzowe', 'Mięso', false),
 ('Schab', 'Mięso', false),
 ('Karkówka', 'Mięso', false),
 ('Boczek', 'Mięso', false),
-('Szynka', 'Wędliny', true),
+('Szynka', 'Wędliny', false),
 ('Salami', 'Wędliny', false),
-('Parówki', 'Wędliny', true),
+('Parówki', 'Wędliny', false),
 ('Kiełbasa', 'Wędliny', false),
 ('Kabanosy', 'Wędliny', false),
 ('Pasztet', 'Wędliny', false);
 
 -- Warzywa
 INSERT INTO home_assistant.produkty (nazwa, kategoria, ulubiony) VALUES
-('Ziemniaki', 'Warzywa', true),
-('Marchewka', 'Warzywa', true),
-('Cebula', 'Warzywa', true),
-('Czosnek', 'Warzywa', true),
-('Pomidory', 'Warzywa', true),
-('Ogórki', 'Warzywa', true),
+('Ziemniaki', 'Warzywa', false),
+('Marchewka', 'Warzywa', false),
+('Cebula', 'Warzywa', false),
+('Czosnek', 'Warzywa', false),
+('Pomidory', 'Warzywa', false),
+('Ogórki', 'Warzywa', false),
 ('Papryka', 'Warzywa', false),
-('Sałata', 'Warzywa', true),
+('Sałata', 'Warzywa', false),
 ('Kapusta', 'Warzywa', false),
 ('Brokuły', 'Warzywa', false),
 ('Kalafior', 'Warzywa', false),
-('Pieczarki', 'Warzywa', true),
+('Pieczarki', 'Warzywa', false),
 ('Szpinak', 'Warzywa', false),
 ('Cukinia', 'Warzywa', false),
 ('Bakłażan', 'Warzywa', false),
@@ -71,10 +71,10 @@ INSERT INTO home_assistant.produkty (nazwa, kategoria, ulubiony) VALUES
 
 -- Owoce
 INSERT INTO home_assistant.produkty (nazwa, kategoria, ulubiony) VALUES
-('Jabłka', 'Owoce', true),
-('Banany', 'Owoce', true),
-('Pomarańcze', 'Owoce', true),
-('Cytryny', 'Owoce', true),
+('Jabłka', 'Owoce', false),
+('Banany', 'Owoce', false),
+('Pomarańcze', 'Owoce', false),
+('Cytryny', 'Owoce', false),
 ('Mandarynki', 'Owoce', false),
 ('Winogrona', 'Owoce', false),
 ('Truskawki', 'Owoce', false),
@@ -90,16 +90,16 @@ INSERT INTO home_assistant.produkty (nazwa, kategoria, ulubiony) VALUES
 
 -- Napoje
 INSERT INTO home_assistant.produkty (nazwa, kategoria, ulubiony) VALUES
-('Woda mineralna', 'Napoje', true),
-('Woda gazowana', 'Napoje', true),
-('Sok pomarańczowy', 'Napoje', true),
+('Woda mineralna', 'Napoje', false),
+('Woda gazowana', 'Napoje', false),
+('Sok pomarańczowy', 'Napoje', false),
 ('Sok jabłkowy', 'Napoje', false),
 ('Cola', 'Napoje', false),
 ('Sprite', 'Napoje', false),
 ('Fanta', 'Napoje', false),
-('Kawa mielona', 'Napoje', true),
+('Kawa mielona', 'Napoje', false),
 ('Kawa rozpuszczalna', 'Napoje', false),
-('Herbata czarna', 'Napoje', true),
+('Herbata czarna', 'Napoje', false),
 ('Herbata zielona', 'Napoje', false),
 ('Herbata owocowa', 'Napoje', false),
 ('Piwo', 'Napoje', false),
@@ -108,27 +108,27 @@ INSERT INTO home_assistant.produkty (nazwa, kategoria, ulubiony) VALUES
 
 -- Produkty suche
 INSERT INTO home_assistant.produkty (nazwa, kategoria, ulubiony) VALUES
-('Makaron spaghetti', 'Produkty suche', true),
+('Makaron spaghetti', 'Produkty suche', false),
 ('Makaron penne', 'Produkty suche', false),
-('Ryż biały', 'Produkty suche', true),
+('Ryż biały', 'Produkty suche', false),
 ('Ryż basmati', 'Produkty suche', false),
 ('Kasza gryczana', 'Produkty suche', false),
 ('Kasza jęczmienna', 'Produkty suche', false),
-('Mąka pszenna', 'Produkty suche', true),
-('Cukier', 'Produkty suche', true),
-('Sól', 'Produkty suche', true),
-('Pieprz', 'Produkty suche', true),
-('Płatki owsiane', 'Produkty suche', true),
+('Mąka pszenna', 'Produkty suche', false),
+('Cukier', 'Produkty suche', false),
+('Sól', 'Produkty suche', false),
+('Pieprz', 'Produkty suche', false),
+('Płatki owsiane', 'Produkty suche', false),
 ('Corn flakes', 'Produkty suche', false),
 ('Musli', 'Produkty suche', false);
 
 -- Przetwory i konserwy
 INSERT INTO home_assistant.produkty (nazwa, kategoria, ulubiony) VALUES
-('Pomidory krojone (puszka)', 'Konserwy', true),
-('Passata pomidorowa', 'Konserwy', true),
-('Ketchup', 'Konserwy', true),
-('Majonez', 'Konserwy', true),
-('Musztarda', 'Konserwy', true),
+('Pomidory krojone (puszka)', 'Konserwy', false),
+('Passata pomidorowa', 'Konserwy', false),
+('Ketchup', 'Konserwy', false),
+('Majonez', 'Konserwy', false),
+('Musztarda', 'Konserwy', false),
 ('Ogórki kiszone', 'Konserwy', false),
 ('Ogórki konserwowe', 'Konserwy', false),
 ('Groszek konserwowy', 'Konserwy', false),
@@ -136,14 +136,14 @@ INSERT INTO home_assistant.produkty (nazwa, kategoria, ulubiony) VALUES
 ('Fasola konserwowa', 'Konserwy', false),
 ('Tuńczyk w puszce', 'Konserwy', false),
 ('Dżem truskawkowy', 'Konserwy', false),
-('Miód', 'Konserwy', true),
+('Miód', 'Konserwy', false),
 ('Nutella', 'Konserwy', false);
 
 -- Mrożonki
 INSERT INTO home_assistant.produkty (nazwa, kategoria, ulubiony) VALUES
 ('Lody waniliowe', 'Mrożonki', false),
 ('Lody czekoladowe', 'Mrożonki', false),
-('Mrożone warzywa mieszanka', 'Mrożonki', true),
+('Mrożone warzywa mieszanka', 'Mrożonki', false),
 ('Mrożona pizza', 'Mrożonki', false),
 ('Frytki mrożone', 'Mrożonki', false),
 ('Ryba mrożona', 'Mrożonki', false),
@@ -162,40 +162,40 @@ INSERT INTO home_assistant.produkty (nazwa, kategoria, ulubiony) VALUES
 
 -- Chemia domowa
 INSERT INTO home_assistant.produkty (nazwa, kategoria, ulubiony) VALUES
-('Płyn do naczyń', 'Chemia', true),
-('Płyn do płukania', 'Chemia', true),
-('Proszek do prania', 'Chemia', true),
-('Płyn uniwersalny', 'Chemia', true),
+('Płyn do naczyń', 'Chemia', false),
+('Płyn do płukania', 'Chemia', false),
+('Proszek do prania', 'Chemia', false),
+('Płyn uniwersalny', 'Chemia', false),
 ('Płyn do WC', 'Chemia', false),
 ('Płyn do szyb', 'Chemia', false),
-('Worki na śmieci', 'Chemia', true),
-('Papier toaletowy', 'Chemia', true),
-('Ręczniki papierowe', 'Chemia', true),
+('Worki na śmieci', 'Chemia', false),
+('Papier toaletowy', 'Chemia', false),
+('Ręczniki papierowe', 'Chemia', false),
 ('Gąbki do naczyń', 'Chemia', false);
 
 -- Higiena osobista
 INSERT INTO home_assistant.produkty (nazwa, kategoria, ulubiony) VALUES
-('Mydło', 'Higiena', true),
-('Szampon', 'Higiena', true),
-('Żel pod prysznic', 'Higiena', true),
-('Pasta do zębów', 'Higiena', true),
+('Mydło', 'Higiena', false),
+('Szampon', 'Higiena', false),
+('Żel pod prysznic', 'Higiena', false),
+('Pasta do zębów', 'Higiena', false),
 ('Szczoteczka do zębów', 'Higiena', false),
-('Dezodorant', 'Higiena', true),
+('Dezodorant', 'Higiena', false),
 ('Krem do rąk', 'Higiena', false),
 ('Chusteczki higieniczne', 'Higiena', false);
 
 -- Oleje i tłuszcze
 INSERT INTO home_assistant.produkty (nazwa, kategoria, ulubiony) VALUES
-('Olej rzepakowy', 'Oleje', true),
-('Oliwa z oliwek', 'Oleje', true),
+('Olej rzepakowy', 'Oleje', false),
+('Oliwa z oliwek', 'Oleje', false),
 ('Olej słonecznikowy', 'Oleje', false),
 ('Olej kokosowy', 'Oleje', false);
 
 -- Przyprawy
 INSERT INTO home_assistant.produkty (nazwa, kategoria, ulubiony) VALUES
-('Papryka słodka', 'Przyprawy', true),
-('Oregano', 'Przyprawy', true),
-('Bazylia', 'Przyprawy', true),
+('Papryka słodka', 'Przyprawy', false),
+('Oregano', 'Przyprawy', false),
+('Bazylia', 'Przyprawy', false),
 ('Tymianek', 'Przyprawy', false),
 ('Rozmaryn', 'Przyprawy', false),
 ('Curry', 'Przyprawy', false),

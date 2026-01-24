@@ -762,6 +762,13 @@ function showModal(type, data = null, extraParam = null, extraParam2 = null) {
                     <label>Data zakonczenia</label>
                     <input type="datetime-local" name="data_zakonczenia" value="${isEdit ? formatDateForInput(data?.data_zakonczenia) : defaultEndDate}" required>
                 </div>
+                ${!isEdit ? `
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" name="utworz_przypomnienie"> Utworz przypomnienie
+                    </label>
+                </div>
+                ` : ''}
                 <div class="form-actions">
                     <button type="button" class="btn btn-secondary" onclick="closeModal()">Anuluj</button>
                     <button type="submit" class="btn btn-primary">${isEdit ? 'Zapisz' : 'Dodaj'}</button>
@@ -940,11 +947,26 @@ async function submitWydarzenie(e, id = null) {
         data_zakonczenia: new Date(form.data_zakonczenia.value).toISOString(),
     };
 
+    const utworzPrzypomnienie = form.utworz_przypomnienie?.checked || false;
+
     try {
+        let wydarzenie;
         if (id) {
             await API.wydarzenia.update(id, data);
         } else {
-            await API.wydarzenia.create(data);
+            wydarzenie = await API.wydarzenia.create(data);
+
+            // Create reminder if checkbox was checked
+            if (utworzPrzypomnienie && wydarzenie) {
+                const przypomnienieData = {
+                    id_wydarzenia: wydarzenie.id,
+                    tytul: data.tytul,
+                    opis: data.opis,
+                    status: 'aktywne',
+                    nastepne_uruchomienie: data.data_startu,
+                };
+                await API.przypomnienia.create(przypomnienieData);
+            }
         }
         closeModal();
         loadWydarzenia();

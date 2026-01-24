@@ -323,6 +323,17 @@ body {
     resize: vertical;
 }
 
+.form-group label input[type="checkbox"] {
+    width: auto;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+.form-group label:has(input[type="checkbox"]) {
+    display: flex;
+    align-items: center;
+}
+
 .form-actions {
     margin-top: 20px;
     display: flex;
