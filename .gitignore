@@ -5,4 +5,4 @@ go.work.sum
 db-data
 home-assistant
 .idea
-
+nginx/.htpasswd
