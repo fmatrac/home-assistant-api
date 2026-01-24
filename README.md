@@ -2,6 +2,8 @@
 
 Link do aplikacji: https://ti.matra.cc
 
+Link do repozytorium: https://github.com/fmatrac/home-assistant-api
+
 Aplikacja do zarządzania domem i życiem osobistym napisana w języku Go z wbudowanym interfejsem webowym. System umożliwia zarządzanie kalendarzem wydarzeń, przypomnieniami, produktami, listami zakupów oraz stanami magazynowymi.
 
 > **Uwaga:** Cała inicjalizacja bazy danych (schemat, tabele, typy) znajduje się w folderze `migrations/`.
