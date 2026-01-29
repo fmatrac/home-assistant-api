@@ -7,6 +7,11 @@ class Settings(BaseSettings):
     server_port: int = 8000
     log_level: str = "info"
 
+    # JWT settings
+    jwt_secret: str = "your-secret-key-change-in-production"
+    jwt_algorithm: str = "HS256"
+    jwt_expire_minutes: int = 60 * 24  # 24 hours
+
     class Config:
         env_file = ".env"
 

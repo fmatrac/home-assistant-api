@@ -3,13 +3,49 @@ let currentSection = 'wydarzenia';
 let produktyCache = [];
 let wydarzeniaCache = [];
 let currentCalendarDate = new Date();
+let currentUser = null;
 
 // Initialize app
 document.addEventListener('DOMContentLoaded', () => {
-    initNavigation();
-    loadProduktyCache();
-    loadWydarzenia();
+    checkAuth();
 });
+
+// Check authentication
+async function checkAuth() {
+    if (!API.isAuthenticated()) {
+        window.location.href = '/login';
+        return;
+    }
+
+    try {
+        currentUser = await API.auth.me();
+        updateUserInfo();
+        initNavigation();
+        loadProduktyCache();
+        loadWydarzenia();
+    } catch (err) {
+        console.error('Auth check failed:', err);
+        API.logout();
+    }
+}
+
+function updateUserInfo() {
+    const userInfo = document.getElementById('user-info');
+    if (userInfo && currentUser) {
+        const roleLabel = currentUser.rola === 'admin' ? ' (Admin)' : '';
+        userInfo.textContent = (currentUser.imie || currentUser.email) + roleLabel;
+    }
+
+    // Show admin menu if user is admin
+    const adminMenuItem = document.getElementById('admin-menu-item');
+    if (adminMenuItem && API.isAdmin()) {
+        adminMenuItem.style.display = 'block';
+    }
+}
+
+function logout() {
+    API.logout();
+}
 
 // Load produkty cache
 async function loadProduktyCache() {
@@ -49,6 +85,7 @@ function switchSection(section) {
         case 'produkty': loadProdukty(); break;
         case 'listy-zakupow': loadListyZakupow(); break;
         case 'stany-magazynowe': loadStanyMagazynowe(); break;
+        case 'admin': loadAdminPanel(); break;
     }
 }
 
@@ -921,6 +958,39 @@ function showModal(type, data = null, extraParam = null, extraParam2 = null) {
                 }, 0);
             }
             break;
+
+        case 'admin-user':
+            title.textContent = 'Edytuj uzytkownika';
+            form.innerHTML = `
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" value="${data?.email || ''}" disabled>
+                </div>
+                <div class="form-group">
+                    <label>Imie</label>
+                    <input type="text" name="imie" value="${data?.imie || ''}">
+                </div>
+                <div class="form-group">
+                    <label>Rola</label>
+                    <select name="rola" ${data?.id === currentUser?.id ? 'disabled' : ''}>
+                        <option value="user" ${data?.rola === 'user' ? 'selected' : ''}>User</option>
+                        <option value="admin" ${data?.rola === 'admin' ? 'selected' : ''}>Admin</option>
+                    </select>
+                    ${data?.id === currentUser?.id ? '<p style="color:#95a5a6;font-size:0.8rem;">Nie mozesz zmienic swojej roli</p>' : ''}
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" name="aktywny" ${data?.aktywny ? 'checked' : ''} ${data?.id === currentUser?.id ? 'disabled' : ''}> Aktywny
+                    </label>
+                    ${data?.id === currentUser?.id ? '<p style="color:#95a5a6;font-size:0.8rem;">Nie mozesz dezaktywowac siebie</p>' : ''}
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Anuluj</button>
+                    <button type="submit" class="btn btn-primary">Zapisz</button>
+                </div>
+            `;
+            form.onsubmit = (e) => submitUserAdmin(e, data?.id);
+            break;
     }
 
     modal.classList.add('active');
@@ -1141,5 +1211,97 @@ function formatDateForInput(dateStr) {
     if (!dateStr) return '';
     const date = new Date(dateStr);
     return date.toISOString().slice(0, 16);
+}
+
+// ==================== ADMIN PANEL ====================
+async function loadAdminPanel() {
+    if (!API.isAdmin()) {
+        switchSection('wydarzenia');
+        return;
+    }
+
+    // Load stats
+    try {
+        const stats = await API.admin.getStats();
+        document.getElementById('stats-users').textContent = stats.total_users;
+    } catch (err) {
+        console.error('Failed to load admin stats:', err);
+    }
+
+    // Load users
+    loadAdminUsers();
+}
+
+async function loadAdminUsers() {
+    const container = document.getElementById('admin-users-list');
+    container.innerHTML = '<div class="loading">Ladowanie...</div>';
+
+    try {
+        const users = await API.admin.getUsers();
+        if (!users || users.length === 0) {
+            container.innerHTML = '<div class="empty-state"><p>Brak uzytkownikow</p></div>';
+            return;
+        }
+
+        container.innerHTML = users.map(u => `
+            <div class="item-card">
+                <h3>${escapeHtml(u.imie || u.email)}</h3>
+                <p>Email: ${escapeHtml(u.email)}</p>
+                <div class="meta">
+                    <span class="badge ${u.rola === 'admin' ? 'badge-aktywne' : 'badge-otwarta'}">${u.rola}</span>
+                    <span class="badge ${u.aktywny ? 'badge-ok' : 'badge-brak'}">${u.aktywny ? 'Aktywny' : 'Nieaktywny'}</span>
+                    <span>Utworzono: ${formatDate(u.utworzono)}</span>
+                </div>
+                <div class="actions">
+                    <button class="btn btn-small btn-secondary" onclick="editUserAdmin(${u.id})">Edytuj</button>
+                    ${u.id !== currentUser.id ? `<button class="btn btn-small btn-danger" onclick="deleteUserAdmin(${u.id})">Usun</button>` : ''}
+                </div>
+            </div>
+        `).join('');
+    } catch (err) {
+        container.innerHTML = `<div class="empty-state"><p>Blad: ${err.message}</p></div>`;
+    }
+}
+
+async function editUserAdmin(id) {
+    try {
+        const user = await API.admin.getUser(id);
+        showModal('admin-user', user);
+    } catch (err) {
+        alert('Blad: ' + err.message);
+    }
+}
+
+async function deleteUserAdmin(id) {
+    if (!confirm('Czy na pewno chcesz usunac tego uzytkownika? Ta operacja jest nieodwracalna.')) return;
+
+    try {
+        await API.admin.deleteUser(id);
+        loadAdminUsers();
+        // Refresh stats
+        const stats = await API.admin.getStats();
+        document.getElementById('stats-users').textContent = stats.total_users;
+    } catch (err) {
+        alert('Blad: ' + err.message);
+    }
+}
+
+async function submitUserAdmin(e, id) {
+    e.preventDefault();
+    const form = e.target;
+
+    const data = {
+        imie: form.imie.value || null,
+        rola: form.rola.value,
+        aktywny: form.aktywny.checked,
+    };
+
+    try {
+        await API.admin.updateUser(id, data);
+        closeModal();
+        loadAdminUsers();
+    } catch (err) {
+        alert('Blad: ' + err.message);
+    }
 }
 

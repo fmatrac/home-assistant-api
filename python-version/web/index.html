@@ -10,12 +10,17 @@
     <div class="app">
         <nav class="sidebar">
             <h1>Home Assistant</h1>
+            <div class="user-section" style="margin-bottom: 20px; padding: 10px; background: #34495e; border-radius: 8px;">
+                <span id="user-info" style="display: block; margin-bottom: 8px; font-size: 0.9rem;"></span>
+                <button onclick="logout()" class="btn btn-small" style="width: 100%; background: #e74c3c;">Wyloguj</button>
+            </div>
             <ul class="nav-menu">
                 <li><a href="#" data-section="wydarzenia" class="active">📅 Wydarzenia</a></li>
                 <li><a href="#" data-section="przypomnienia">🔔 Przypomnienia</a></li>
                 <li><a href="#" data-section="produkty">📦 Produkty</a></li>
                 <li><a href="#" data-section="listy-zakupow">🛒 Listy zakupów</a></li>
                 <li><a href="#" data-section="stany-magazynowe">📊 Stany magazynowe</a></li>
+                <li id="admin-menu-item" style="display: none;"><a href="#" data-section="admin">⚙️ Panel admina</a></li>
             </ul>
         </nav>
 
@@ -94,6 +99,21 @@
                     <button class="btn btn-small btn-danger" onclick="loadStanyMagazynowe('brak')">❌ Brak</button>
                 </div>
                 <div id="stany-magazynowe-list" class="items-list"></div>
+            </section>
+
+            <!-- Panel Admina -->
+            <section id="admin" class="section">
+                <div class="section-header">
+                    <h2>Panel Administratora</h2>
+                </div>
+                <div class="admin-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                    <div class="item-card" style="text-align: center;">
+                        <h3 id="stats-users">-</h3>
+                        <p>Uzytkownicy</p>
+                    </div>
+                </div>
+                <h3 style="margin-bottom: 15px;">Zarzadzanie uzytkownikami</h3>
+                <div id="admin-users-list" class="items-list"></div>
             </section>
         </main>
     </div>

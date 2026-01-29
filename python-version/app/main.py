@@ -35,6 +35,12 @@ def serve_frontend():
     return FileResponse("web/index.html")
 
 
+# Serve login page
+@app.get("/login")
+def serve_login():
+    return FileResponse("web/login.html")
+
+
 if __name__ == "__main__":
     import uvicorn
 

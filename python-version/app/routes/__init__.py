@@ -1,8 +1,10 @@
 from fastapi import APIRouter
-from app.routes import wydarzenia, przypomnienia, produkty, listy_zakupow, pozycje_listy, stany_magazynowe, historia_zapasow
+from app.routes import wydarzenia, przypomnienia, produkty, listy_zakupow, pozycje_listy, stany_magazynowe, historia_zapasow, auth, admin
 
 api_router = APIRouter(prefix="/api")
 
+api_router.include_router(auth.router, tags=["auth"])
+api_router.include_router(admin.router, tags=["admin"])
 api_router.include_router(wydarzenia.router, tags=["wydarzenia"])
 api_router.include_router(przypomnienia.router, tags=["przypomnienia"])
 api_router.include_router(produkty.router, tags=["produkty"])

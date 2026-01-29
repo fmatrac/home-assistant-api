@@ -28,6 +28,11 @@ class StanZapasow(str, Enum):
     brak = "brak"
 
 
+class RolaUzytkownika(str, Enum):
+    user = "user"
+    admin = "admin"
+
+
 # Models
 class WydarzenieKalendarzBase(BaseModel):
     tytul: str
@@ -158,3 +163,52 @@ class HistoriaStanuZapasow(HistoriaStanuZapasowBase):
 
     class Config:
         from_attributes = True
+
+
+# User models
+class UzytkownikBase(BaseModel):
+    email: str
+    imie: Optional[str] = None
+
+
+class UzytkownikCreate(UzytkownikBase):
+    haslo: str
+
+
+class Uzytkownik(UzytkownikBase):
+    id: int
+    rola: RolaUzytkownika = RolaUzytkownika.user
+    aktywny: bool = True
+    utworzono: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
+
+
+class UzytkownikLogin(BaseModel):
+    email: str
+    haslo: str
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+
+
+class TokenData(BaseModel):
+    user_id: Optional[int] = None
+    email: Optional[str] = None
+    rola: Optional[str] = None
+
+
+# Admin models
+class UzytkownikAdmin(Uzytkownik):
+    """Model użytkownika dla widoku admina - zawiera więcej danych"""
+    pass
+
+
+class UzytkownikUpdateAdmin(BaseModel):
+    """Model do aktualizacji użytkownika przez admina"""
+    imie: Optional[str] = None
+    rola: Optional[RolaUzytkownika] = None
+    aktywny: Optional[bool] = None
