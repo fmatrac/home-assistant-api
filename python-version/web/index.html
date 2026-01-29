@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Assistant</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="sidebar">
+            <h1>Home Assistant</h1>
+            <ul class="nav-menu">
+                <li><a href="#" data-section="wydarzenia" class="active">📅 Wydarzenia</a></li>
+                <li><a href="#" data-section="przypomnienia">🔔 Przypomnienia</a></li>
+                <li><a href="#" data-section="produkty">📦 Produkty</a></li>
+                <li><a href="#" data-section="listy-zakupow">🛒 Listy zakupów</a></li>
+                <li><a href="#" data-section="stany-magazynowe">📊 Stany magazynowe</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <!-- Wydarzenia / Kalendarz -->
+            <section id="wydarzenia" class="section active">
+                <div class="section-header">
+                    <h2>Kalendarz</h2>
+                    <button class="btn btn-primary" onclick="showModal('wydarzenie')">+ Dodaj wydarzenie</button>
+                </div>
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <button class="btn btn-small" onclick="changeMonth(-1)">&lt; Poprzedni</button>
+                        <h3 id="calendar-month-year"></h3>
+                        <button class="btn btn-small" onclick="changeMonth(1)">Nastepny &gt;</button>
+                    </div>
+                    <div class="calendar-grid">
+                        <div class="calendar-weekdays">
+                            <span>Pon</span>
+                            <span>Wt</span>
+                            <span>Sr</span>
+                            <span>Czw</span>
+                            <span>Pt</span>
+                            <span>Sob</span>
+                            <span>Ndz</span>
+                        </div>
+                        <div id="calendar-days" class="calendar-days"></div>
+                    </div>
+                </div>
+                <div id="wydarzenia-list" class="items-list" style="margin-top: 20px;"></div>
+            </section>
+
+            <!-- Przypomnienia -->
+            <section id="przypomnienia" class="section">
+                <div class="section-header">
+                    <h2>Przypomnienia</h2>
+                    <button class="btn btn-primary" onclick="showModal('przypomnienie')">+ Dodaj przypomnienie</button>
+                </div>
+                <div id="przypomnienia-list" class="items-list"></div>
+            </section>
+
+            <!-- Produkty -->
+            <section id="produkty" class="section">
+                <div class="section-header">
+                    <h2>Produkty</h2>
+                    <button class="btn btn-primary" onclick="showModal('produkt')">+ Dodaj produkt</button>
+                </div>
+                <div class="search-box">
+                    <input type="text" id="produkty-search" placeholder="Szukaj produktu..." oninput="filterProdukty(this.value)">
+                </div>
+                <div class="filters">
+                    <button class="btn btn-small" onclick="loadProdukty()">Wszystkie</button>
+                    <button class="btn btn-small" onclick="loadProduktyUlubione()">Ulubione</button>
+                </div>
+                <div id="produkty-list" class="items-list"></div>
+            </section>
+
+            <!-- Listy zakupow -->
+            <section id="listy-zakupow" class="section">
+                <div class="section-header">
+                    <h2>Listy zakupów</h2>
+                    <button class="btn btn-primary" onclick="showModal('lista-zakupow')">+ Nowa lista</button>
+                </div>
+                <div id="listy-zakupow-list" class="items-list"></div>
+            </section>
+
+            <!-- Stany magazynowe -->
+            <section id="stany-magazynowe" class="section">
+                <div class="section-header">
+                    <h2>Stany magazynowe</h2>
+                    <button class="btn btn-primary" onclick="showModal('stan-magazynowy')">+ Dodaj stan</button>
+                </div>
+                <div class="filters">
+                    <button class="btn btn-small" onclick="loadStanyMagazynowe()">Wszystkie</button>
+                    <button class="btn btn-small btn-warning" onclick="loadStanyMagazynowe('malo')">⚠️ Niski stan</button>
+                    <button class="btn btn-small btn-danger" onclick="loadStanyMagazynowe('brak')">❌ Brak</button>
+                </div>
+                <div id="stany-magazynowe-list" class="items-list"></div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3 id="modal-title"></h3>
+            <form id="modal-form"></form>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
+
