@@ -1,7 +1,6 @@
 # Home Assistant API
 
 Link do aplikacji: https://ti.matra.cc
-logowanie: admin admin123
 
 Link do repozytorium: https://github.com/fmatrac/home-assistant-api
 
